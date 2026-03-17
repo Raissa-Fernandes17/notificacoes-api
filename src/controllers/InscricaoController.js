@@ -85,8 +85,8 @@ function detalhes(req, res) {
 }
 
 module.exports = {
-    store,
     index,
+    store,
     listarPorEvento,
     cancelar,
     detalhes

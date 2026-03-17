@@ -1,29 +1,38 @@
-
 const express = require("express");
+const swaggerUi = require("swagger-ui-express"); // Verifique o '=' aqui
+const swaggerSpec = require("./swagger");
 const app = express();
 
-// 1. Importar as rotas (Remova os // daqui!)
-const eventoRoutes = require("./routes/EventoRoutes"); 
-const participanteRoutes = require("./routes/ParticipanteRoutes"); 
-const inscricaoRoutes = require("./routes/InscricaoRoutes");
 
-
-// 2. Usar (Remova os // daqui!)
-app.use("/eventos", eventoRoutes);
-app.use("/participantes", participanteRoutes);
+// Middlewares
 app.use(express.json());
+// Documentação Swagger
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+
+
+// Rotas
+const eventoRoutes = require("./routes/EventoRoutes");
+app.use("/eventos", eventoRoutes);
+
+const participanteRoutes = require("./routes/ParticipanteRoutes");
+app.use("/participantes", participanteRoutes);
+
+
+const inscricaoRoutes = require("./routes/InscricaoRoutes");
 app.use("/inscricoes", inscricaoRoutes);
 
 
-// 3. Rota raiz para teste rápido
+
+// Rota raiz
 app.get("/", (req, res) => {
   res.json({
     mensagem: "API de Notificações",
+    documentacao: "/api-docs",
     rotas: {
       eventos: "/eventos",
       participantes: "/participantes",
-      inscricoes: "/inscricoes"
-    }
+      inscricoes: "/inscricoes",
+    },
   });
 });
 
